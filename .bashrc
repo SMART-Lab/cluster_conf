@@ -23,6 +23,9 @@
 # mkdir /rap/ycy-622-aa/canopy
 # bash canopy-1.4.1-full-rh5-64.sh canopy/
 # /rap/ycy-622-aa/canopy/canopy_cli --no-gui-setup --common-install --install-dir=/rap/ycy-622-aa/.local
+###### To update canopy
+### enpkg --update-all
+### enpkg --whats-new
 
 
 ###################################
