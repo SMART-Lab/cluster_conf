@@ -26,13 +26,34 @@
 ###### To update canopy
 ### enpkg --update-all
 ### enpkg --whats-new
-
-
 ###################################
 ########## Dynamic loads ##########
 ###################################
 ## Loading canopy python
-VIRTUAL_ENV_DISABLE_PROMPT=1 source /rap/ycy-622-aa/.local/Canopy_64bit/User/bin/activate
+#VIRTUAL_ENV_DISABLE_PROMPT=1 source /rap/ycy-622-aa/.local/Canopy_64bit/User/bin/activate
+
+
+######## Initial Setup ##########
+# cat > ~/.numpy-site.cfg << EOF
+# [mkl]
+# library_dirs = $MKLROOT/lib/intel64
+# include_dirs = $MKLROOT/include
+# mkl_libs = mkl_rt
+# lapack_libs =
+# EOF
+
+# graphviz-2.38.0.tar.gz
+# ./configure --prefix=$HOME_GROUP/.local && make clean && make && make install
+
+# mv $HOME/.pip/pip.conf $HOME/.pip/pip.conf_B
+# echo "Updating Numpy!"
+# pip install --upgrade --no-deps --install-option="--prefix=$HOME_GROUP/.local" numpy
+# echo "Updating Scipy!"
+# pip install --upgrade --no-deps --install-option="--prefix=$HOME_GROUP/.local" scipy
+# echo "Updating iPython!"
+# pip install --upgrade --no-use-wheel --no-deps --install-option="--prefix=$HOME_GROUP/.local" ipython
+# mv $HOME/.pip/pip.conf_B $HOME/.pip/pip.conf# mv $HOME/.pip/pip.conf_B $HOME/.pip/pip.conf
+
 
 
 #############################
@@ -46,7 +67,6 @@ export CPATH=$CPATH:$HOME/.local/include
 export CPATH=$CPATH:$HOME_GROUP/.local/include
 export C_INCLUDE_PATH=$C_INCLUDE_PATH:$HOME/.local/include
 export C_INCLUDE_PATH=$C_INCLUDE_PATH:$HOME_GROUP/.local/include
-export CPATH=$CPATH:$HOME_GROUP/.local/include
 export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$HOME/.local/include
 export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$HOME_GROUP/.local/include
 
@@ -72,8 +92,7 @@ if [ ! -f $HOME/.group_config_run ]; then
 
   # Setting up modules
   module purge 2> /dev/null
-  # apps/python/2.7.5
-  module add apps/git/1.8.5.3 apps/mercurial/2.7.2 libs/hdf5/1.8.11 apps/gnuplot/4.6.4 libs/mkl/11.1 apps/cmake/2.8.12.1 apps/gdb/7.6.1 libs/boost/1.55.0
+  module add apps/python/2.7.5 apps/git/1.8.5.3 apps/mercurial/2.7.2 libs/hdf5/1.8.11 apps/gnuplot/4.6.4 libs/mkl/11.1 apps/cmake/2.8.12.1 apps/gdb/7.6.1 libs/boost/1.55.0
   module save 2> /dev/null
 
   # Flagging the one time config as done
