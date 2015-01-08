@@ -1,0 +1,27 @@
+######## Initial Setup ##########
+mkdir /rap/ycy-622-aa/.local/
+mkdir /rap/ycy-622-aa/.local/bin
+mkdir /rap/ycy-622-aa/.local/shared
+mkdir /rap/ycy-622-aa/.local/lib
+mkdir /rap/ycy-622-aa/.local/lib/python2.7
+mkdir /rap/ycy-622-aa/.local/lib/python2.7/site-packages
+
+cat > ~/.numpy-site.cfg << EOF
+[mkl]
+library_dirs = $MKLROOT/lib/intel64
+include_dirs = $MKLROOT/include
+mkl_libs = mkl_rt
+lapack_libs =
+EOF
+
+graphviz-2.38.0.tar.gz
+./configure --prefix=$HOME_GROUP/.local && make clean && make && make install
+
+mv $HOME/.pip/pip.conf $HOME/.pip/pip.conf_B
+echo "Updating Numpy!"
+pip install --upgrade --no-deps --install-option="--prefix=$HOME_GROUP/.local" numpy
+echo "Updating Scipy!"
+pip install --upgrade --no-deps --install-option="--prefix=$HOME_GROUP/.local" scipy
+echo "Updating iPython!"
+pip install --upgrade --no-use-wheel --no-deps --install-option="--prefix=$HOME_GROUP/.local" ipython
+mv $HOME/.pip/pip.conf_B $HOME/.pip/pip.conf# mv $HOME/.pip/pip.conf_B $HOME/.pip/pip.conf

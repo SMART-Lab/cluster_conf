@@ -1,65 +1,44 @@
 # .bashrc
 # S.M.A.R.T. Lab global definitions
 
-### Initial Setup test taht failed ###
-# mkdir /rap/ycy-622-aa/.local/
-# mkdir /rap/ycy-622-aa/.local/bin
-# mkdir /rap/ycy-622-aa/.local/shared
-# mkdir /rap/ycy-622-aa/.local/lib
-# mkdir /rap/ycy-622-aa/.local/lib/python2.7
-# mkdir /rap/ycy-622-aa/.local/lib/python2.7/site-packages
-# easy_install --prefix=$HOME_GROUP/.local/ ipython
-# mv $HOME/.pip/pip.conf $HOME/.pip/pip.conf_B; pip install --install-option="--prefix=/rap/ycy-622-aa/.local" numpy pydot nose; mv $HOME/.pip/pip.conf_B $HOME/.pip/pip.conf
-# mv $HOME/.pip/pip.conf $HOME/.pip/pip.conf_B; pip install --install-option="--prefix=/rap/ycy-622-aa/.local" scipy; mv $HOME/.pip/pip.conf_B $HOME/.pip/pip.conf
-# matplotlib scipy
 
-### Initial Setup ###
-# mkdir /rap/ycy-622-aa/.local/
-# mkdir /rap/ycy-622-aa/.local/bin
-# mkdir /rap/ycy-622-aa/.local/shared
-# mkdir /rap/ycy-622-aa/.local/lib
-# mkdir /rap/ycy-622-aa/.local/lib/python2.7
-# mkdir /rap/ycy-622-aa/.local/lib/python2.7/site-packages
-# mkdir /rap/ycy-622-aa/canopy
-# bash canopy-1.4.1-full-rh5-64.sh canopy/
-# /rap/ycy-622-aa/canopy/canopy_cli --no-gui-setup --common-install --install-dir=/rap/ycy-622-aa/.local
-###### To update canopy
-### enpkg --update-all
-### enpkg --whats-new
-###################################
-########## Dynamic loads ##########
-###################################
-## Loading canopy python
-#VIRTUAL_ENV_DISABLE_PROMPT=1 source /rap/ycy-622-aa/.local/Canopy_64bit/User/bin/activate
+##############################
+########## LAB NEWS ##########
+##############################
+if [ -t 0 ]; then # Verify that this is an interactive shell before printing
+  echo -e "\e[41m##############################################\e[49m"
+  echo -e "\e[41m#~~~~~~~~~~~~~~~~~LAB INFO~~~~~~~~~~~~~~~~~~~#\e[49m"
+  echo -e "\e[41m##############################################\e[49m"
+  echo "- You can now use pip normally to install packages and it will automatically put them in your home."
+  echo "- Pip now has basic autocomplete for commands, use TAB and TAB TAB while typing commands."
+  echo -e "\e[92m- Smartdispatch updates to version 1.1! New list char \"[]\" see smart_dispatch.py --help.\033[0m"
+  echo ""
+fi
 
-
-######## Initial Setup ##########
-# cat > ~/.numpy-site.cfg << EOF
-# [mkl]
-# library_dirs = $MKLROOT/lib/intel64
-# include_dirs = $MKLROOT/include
-# mkl_libs = mkl_rt
-# lapack_libs =
-# EOF
-
-# graphviz-2.38.0.tar.gz
-# ./configure --prefix=$HOME_GROUP/.local && make clean && make && make install
-
-# mv $HOME/.pip/pip.conf $HOME/.pip/pip.conf_B
-# echo "Updating Numpy!"
-# pip install --upgrade --no-deps --install-option="--prefix=$HOME_GROUP/.local" numpy
-# echo "Updating Scipy!"
-# pip install --upgrade --no-deps --install-option="--prefix=$HOME_GROUP/.local" scipy
-# echo "Updating iPython!"
-# pip install --upgrade --no-use-wheel --no-deps --install-option="--prefix=$HOME_GROUP/.local" ipython
-# mv $HOME/.pip/pip.conf_B $HOME/.pip/pip.conf# mv $HOME/.pip/pip.conf_B $HOME/.pip/pip.conf
-
+######################################
+########## CLUSTER SPECIFIC ##########
+######################################
+function get_cluster {
+  if [ $LMOD_SYSTEM_NAME ]; then
+    echo "colosse"
+  elif [ $BQMAMMOUTH ]; then
+    echo $BQMAMMOUTH
+  elif [ `qstat -sql | grep server:` == "server: gm-schrmat"]; then
+    echo "guillimin"
+  fi
+}
+export CLUSTER_NAME=$(get_cluster)
+export HOME_GROUP=`dirname "$BASH_SOURCE"`
+if [ -f $HOME_GROUP/SRC/bashrc/.$CLUSTER_NAME ]; then
+  . $HOME_GROUP/SRC/bashrc/.$CLUSTER_NAME
+else
+    echo "NEW CLUSTER"
+fi
 
 
 #############################
 ########## EXPORTS ##########
 #############################
-export HOME_GROUP=$RAP
 export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:$HOME_GROUP/.local/bin
 
@@ -71,6 +50,7 @@ export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$HOME/.local/include
 export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$HOME_GROUP/.local/include
 
 export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/
+export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/python2.7/site-packages/
 export PYTHONPATH=$PYTHONPATH:$HOME_GROUP/.local/lib/
 export PYTHONPATH=$PYTHONPATH:$HOME_GROUP/.local/lib/python2.7/site-packages/
 
@@ -90,9 +70,8 @@ if [ ! -f $HOME/.group_config_run ]; then
       ln -s $HOME_GROUP/.pip/pip.conf $HOME/.pip/pip.conf
   fi
 
-  # Setting up modules
+  # Cleaning up modules
   module purge 2> /dev/null
-  module add apps/python/2.7.5 apps/git/1.8.5.3 apps/mercurial/2.7.2 libs/hdf5/1.8.11 apps/gnuplot/4.6.4 libs/mkl/11.1 apps/cmake/2.8.12.1 apps/gdb/7.6.1 libs/boost/1.55.0
   module save 2> /dev/null
 
   # Flagging the one time config as done
@@ -121,7 +100,7 @@ fi
 ###########################################
 ##########       FUNCTIONS       ##########
 ###########################################
-ipdb() {
+function ipdb {
   params="$@"
   ipython --pdb -c "%run $params"
 }
@@ -155,21 +134,6 @@ fi
 ############################
 ########## PROMPT ##########
 ############################
-#if [ ${HOSTNAME:0:5} != 'cg000' ]; then
 if [ -t 0 ]; then # Verify that this is an interactive shell before printing
-    PS1="\[\e[34;1m\]\u@\[\e[33;1m\]\H \[\e[0m\]\W\[\e[32;1m\]\$(parse_git_branch_or_tag)\[\e[31;1m\]$ \[\e[0m\]"
-fi
-
-
-##############################
-########## LAB NEWS ##########
-##############################
-if [ -t 0 ]; then # Verify that this is an interactive shell before printing
-  echo -e "\e[41m##############################################\e[49m"
-  echo -e "\e[41m#~~~~~~~~~~~~~~~~~LAB INFO~~~~~~~~~~~~~~~~~~~#\e[49m"
-  echo -e "\e[41m##############################################\e[49m"
-  echo "- You can now use pip normally to install packages and it will automatically put them in your home."
-  echo "- Pip now has basic autocomplete for commands, use TAB and TAB TAB while typing commands."
-  echo -e "\e[92m- New version of Smartdispatch! Just type smart_dispatch.py --help.\033[0m"
-  echo ""
+    PS1="\[\e[34;1m\]\u@\[\e[33;1m\]$CLUSTER_NAME-\H \[\e[0m\]\W\[\e[32;1m\]\$(parse_git_branch_or_tag)\[\e[31;1m\]$ \[\e[0m\]"
 fi

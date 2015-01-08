@@ -1,0 +1,15 @@
+# .bashrc
+# Guillimin specific definitions
+
+########################
+######## MODULE ########
+########################
+module load mercurial python64/2.7.5 intel64/12.0.5.220 #ask mammouth guy about why it's better to load the old intel64/12.0.5.220 (only one linked with mkl/python)
+
+if [ ${HOSTNAME:0:5} == 'cg000' ] && [ ${HOSTNAME:5} != '5' ]; then # If on CUDA GPU node
+    module load cuda
+fi
+
+
+# Load global mammouth definitions
+. $HOME_GROUP/SRC/bashrc/.mammouth

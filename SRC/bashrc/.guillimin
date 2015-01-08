@@ -1,0 +1,12 @@
+# .bashrc
+# Guillimin specific definitions
+
+#export LDFLAGS=$LDFLAGS" -L/software/libraries/GotoBLAS_LAPACK/shared -L/software/libraries/GotoBLAS_LAPACK" # This make sure that numpy is linked properly with BLAS
+#export LDFLAGS=$LDFLAGS" -L/usr/lib64 -L/usr/lib64/purple-2"
+
+#export FFLAGS=$FFLAGS" -c"
+
+########################
+######## MODULE ########
+########################
+module add ifort_icc/14.0.4 python/2.7.3-MKL MKL/11.1.4 HDF5/1.8.7-intel
