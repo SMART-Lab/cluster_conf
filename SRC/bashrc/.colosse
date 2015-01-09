@@ -1,0 +1,7 @@
+# .bashrc
+# Colosse/helios specific definitions
+
+########################
+######## MODULE ########
+########################
+module load apps/python/2.7.5 apps/git/1.8.5.3 apps/mercurial/2.7.2 libs/hdf5/1.8.11 apps/gnuplot/4.6.4 libs/mkl/11.1 apps/cmake/2.8.12.1 apps/gdb/7.6.1 libs/boost/1.55.0 cuda/6.5.14

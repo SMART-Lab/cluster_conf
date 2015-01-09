@@ -1,0 +1,88 @@
+# .bashrc
+# Mammout clusters specific definitions
+
+##### CRAP #####
+#export MLPYTHON_DATASET_REPO=$HOME_GROUP/ml_datasets
+#export MLPYTHON_DATASET_REPO=$SHARE_NOBACKUP/ml_datasets
+# Hack to have access on BRUME
+#export SCRATCH=`env | grep -m1 PARALLEL_SCRATCH_GROUP_MP2* | tr '=' '\n' | grep '/'`
+
+#####################################
+##########  INITIAL SETUP  ##########
+#####################################
+# ln -s /nfs3_ib/10.0.220.3/tank/nfs/larochel/nobackup/share/ml_datasets $MLPYTHON_DATASET_REPO
+
+
+###########################################
+##########       FUNCTIONS       ##########
+###########################################
+# Useful script
+# /opt/ccstools/bin/
+function qqJobs {
+  bqmon -u $USER | grep $LOGNAME'\|^  [^ ]\|qwork\|qtest\|qfat256\|qfat512\|qlong\|Nodes\|Total'
+}
+
+function get_current_user_quota_usage_percentage {
+    usage=(`getstatusdisk_user.sh 2> /dev/null | grep $USER`)
+    usage=${usage[2]}
+    usage=${usage:0:$[(`expr length $usage`)-1]}
+
+    group_quota=(`getstatusdisk_user.sh 2> /dev/null | tail -n8 | head -n1`)
+    group_quota=${group_quota[3]}
+    group_quota=${group_quota:0:$[(`expr length $group_quota`)-1]}
+
+    bc <<< 'scale=2; '$usage'/'$group_quota
+}
+
+
+###########################
+########## QUOTA ##########
+###########################
+if [ -t 0 ]; then # Verify that this is an interactive shell before printing
+  function get_group_max_quota () {
+    group_quota=(`quota -g $1 | tail -n1`)
+    group_quota=${group_quota[1]}
+    echo $[$group_quota/1024]
+  }
+
+  function get_user_usage () {
+    if [ "$BQMAMMOUTH" == "ms" ]; then
+      usage=(`ssh larochel-mp2.rqchp.ca getstatusdisk_user.sh 2> /dev/null | grep $1`)
+    else
+      usage=(`getstatusdisk_user.sh 2> /dev/null | grep $1`)
+    fi
+    usage=${usage[2]}
+    usage=${usage:0:$[(`expr length $usage`)-1]}
+    echo $usage
+  }
+
+  function get_current_user_quota_usage_percentage {
+      usage=$(get_user_usage $USER)
+      group_quota=$(get_group_max_quota 'larochel')
+      bc <<< 'scale=2; '$usage'/'$group_quota'*100'
+  }
+
+  function get_number_of_user_in_group () {
+      getent group $1 | tr "," "\n" | wc -l
+  }
+
+  usage_percent=$(get_current_user_quota_usage_percentage)
+
+  nb_user=$(get_number_of_user_in_group 'laroche1')
+  max_usage_percent=$(bc <<< 'scale=2; 100/'$nb_user)
+
+
+  if (( $(echo "$usage_percent > $max_usage_percent" | bc -l) ));then
+      echo -e "\033[31mYou are using to much data! Please clean your home."
+      echo -e "You are using" $usage_percent"% of the whole group and you should not use more than" $max_usage_percent"%."
+
+      # Compute how much to remove
+      group_quota=$(get_group_max_quota 'larochel')
+      t=$(bc <<< 'scale=4; '$max_usage_percent'/100')
+      max_usage_mb=$(bc -l <<< 'scale=0; ('$group_quota'*'$t')/1')
+      usage_usage_mb=$(get_user_usage $USER)
+      to_remove=$[$usage_usage_mb-$max_usage_mb]
+
+      echo -e "Please remove at least" $to_remove"mb! :D\033[0m"
+  fi
+fi
