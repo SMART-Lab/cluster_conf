@@ -23,7 +23,7 @@ function get_cluster {
     echo "colosse"
   elif [ $BQMAMMOUTH ]; then
     echo $BQMAMMOUTH
-  elif [ `qstat -sql | grep server:` == "server: gm-schrmat"]; then
+  elif [ "`qstat -sql | grep server:`" == "server: gm-schrmat" ]; then
     echo "guillimin"
   fi
 }
