@@ -29,11 +29,6 @@ function get_cluster {
 }
 export CLUSTER_NAME=$(get_cluster)
 export HOME_GROUP=`dirname "$BASH_SOURCE"`
-if [ -f $HOME_GROUP/SRC/bashrc/.$CLUSTER_NAME ]; then
-  . $HOME_GROUP/SRC/bashrc/.$CLUSTER_NAME
-else
-    echo "NEW CLUSTER"
-fi
 
 
 #############################
@@ -79,6 +74,14 @@ if [ ! -f $HOME/.group_config_run ]; then
   echo "Done"
 fi
 
+########################
+######## MODULE ########
+########################
+if [ -f $HOME_GROUP/SRC/bashrc/.$CLUSTER_NAME ]; then
+  . $HOME_GROUP/SRC/bashrc/.$CLUSTER_NAME
+else
+    echo -e "\033[1;31mNew cluster or change in old cluster.\033[0m"
+fi
 
 ###########################
 ########## ALIAS ##########
