@@ -9,4 +9,4 @@
 ########################
 ######## MODULE ########
 ########################
-module add ifort_icc/14.0.4 python/2.7.3-MKL MKL/11.1.4 HDF5/1.8.7-intel
+module load ifort_icc/14.0.4 python/2.7.3-MKL MKL/11.1.4 HDF5/1.8.7-intel CUDA_Toolkit/6.0
