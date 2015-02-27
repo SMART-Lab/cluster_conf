@@ -12,4 +12,4 @@ fi
 
 
 # Load global mammouth definitions
-. $HOME_GROUP/SRC/bashrc/.mammouth
+. $HOME_GROUP/SRC/bashrc/.mammouth_base

@@ -28,7 +28,10 @@ function get_cluster {
   fi
 }
 export CLUSTER_NAME=$(get_cluster)
-export HOME_GROUP=`dirname "$BASH_SOURCE"`
+if [ ! $HOME_GROUP ]; then
+        export HOME_GROUP=`dirname "$BASH_SOURCE"`
+fi
+
 
 
 #############################
