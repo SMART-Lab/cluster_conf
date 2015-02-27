@@ -29,7 +29,7 @@ function get_cluster {
 }
 export CLUSTER_NAME=$(get_cluster)
 if [ ! $HOME_GROUP ]; then
-        export HOME_GROUP=`dirname "$BASH_SOURCE"`
+  export HOME_GROUP=`dirname "$BASH_SOURCE"`
 fi
 
 
@@ -69,11 +69,13 @@ if [ ! -f $HOME/.group_config_run ]; then
   fi
 
   # Cleaning up modules
-  module purge 2> /dev/null
-  if [ $CLUSTER_NAME == "colosse" ]; then
-    module rm mpi/openmpi/1.8.4 cuda/6.0.37
+  if [ ! $CLUSTER_NAME == "mp2" ] && [ ! $CLUSTER_NAME == "ms" ]; then
+    module purge 2> /dev/null
+    if [ $CLUSTER_NAME == "colosse" ]; then
+      module rm mpi/openmpi/1.8.4 cuda/6.0.37
+    fi
+    module save 2> /dev/null
   fi
-  module save 2> /dev/null
 
   # Flagging the one time config as done
   touch $HOME/.group_config_run
