@@ -1,0 +1,6 @@
+# beta cluster
+
+# Load parent definiton
+. $HOME_GROUP/SRC/bashrc/.mp2
+
+module load cuda/6.0.37
