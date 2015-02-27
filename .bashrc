@@ -67,6 +67,9 @@ if [ ! -f $HOME/.group_config_run ]; then
 
   # Cleaning up modules
   module purge 2> /dev/null
+  if [ $CLUSTER_NAME == "colosse" ]; then
+    module rm mpi/openmpi/1.8.4 cuda/6.0.37
+  fi
   module save 2> /dev/null
 
   # Flagging the one time config as done
@@ -97,6 +100,8 @@ alias us='setxkbmap us'
 ##############################
 if [ -t 0 ]; then # Verify that this is an interactive shell before binding
   bind '"\C-p": shell-kill-word'
+  bind '"\eOC":forward-word'
+  bind '"\eOD":backward-word'
 fi
 
 
