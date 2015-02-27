@@ -13,3 +13,12 @@ module load ifort_icc/14.0.4 python/2.7.3-MKL MKL/11.1.4 HDF5/1.8.7-intel
 if [ ${HOSTNAME:0:5} == 'aw-4r' ]; then # If on CUDA GPU node
     module load CUDA_Toolkit/6.0
 fi
+
+
+
+
+## For quota
+# sudo -u resuyxorp /etc/user_quota.ksh
+
+## Quota scripts
+# /usr/local/bin/
