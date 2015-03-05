@@ -11,7 +11,7 @@ if [ -t 0 ]; then # Verify that this is an interactive shell before printing
   echo -e "\e[41m##############################################\e[49m"
   echo "- You can now use pip normally to install packages and it will automatically put them in your home."
   echo "- Pip now has basic autocomplete for commands, use TAB and TAB TAB while typing commands."
-  echo -e "\e[92m- Smartdispatch updates to version 1.1! New list char \"[]\" see smart_dispatch.py --help.\033[0m"
+  echo -e "\e[92m- Smartdispatch updated to version 1.2! You can now see which job failed in the command folder.\033[0m"
   echo ""
 fi
 
